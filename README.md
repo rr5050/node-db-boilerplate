@@ -5,10 +5,9 @@
     docker-compose up -d
     npm run dev
 
-## Description:
+### Docker-compose
 
-docker: MariaDB server
-Will setup a docker volume to contain the database. If it's not present at startup, the database will be started and then initialized with files in the folder './src/db/sql/initdb' - using them in an alfabetically order.
+Will setup a MariaDB server with a docker volume to contain the database. If it's not present at startup, the database will be started and then initialized with files in the folder './src/db/sql/initdb' - using them in an alfabetically order.
 
 ---
 
