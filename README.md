@@ -17,10 +17,12 @@ Will setup a docker volume to contain the database. If it's not present at start
 Has been specifically setup to recover from most errors. You still need to write proper SQL and handle results properly.
 
 in any back-end javascript file, import it with:
-import { asyncQuery } from './models/mariadb.db.model.js'
+
+    import { asyncQuery } from './models/mariadb.db.model.js'
 
 and call it with the async function (with await):
-asyncQuery(query, params)
+
+    asyncQuery(query, params)
 
 ---
 
@@ -31,11 +33,13 @@ Makes it possible to listen for connections once all other parts of the server a
 in the file 'ready.controller.js' you set which events to listen for in the variable at the top: 'eventsToWaitFor'
 
 in any back-end javascript file, import it with:
-import readyController from '../controllers/ready.controller.js'
+
+    import readyController from '../controllers/ready.controller.js'
 
 and trigger events as following (success and fail shown):
-readyController.emit('eventName')
-readyController.emit('eventName:error')
+
+    readyController.emit('eventName')
+    readyController.emit('eventName:error')
 
 ---
 
