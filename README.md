@@ -1,9 +1,9 @@
-# Starter Boilderplate for Node.js + MariaDB +++
+# Starter Boilerplate for Node.js + MariaDB +++
 
-setup:
-npm install
-docker-compose up -d
-npm run dev
+    setup:
+    npm install
+    docker-compose up -d
+    npm run dev
 
 ## Description:
 
@@ -12,7 +12,8 @@ Will setup a docker volume to contain the database. If it's not present at start
 
 ---
 
-mariadb.db.model.js
+### mariadb.db.model.js
+
 Has been specifically setup to recover from most errors. You still need to write proper SQL and handle results properly.
 
 in any back-end javascript file, import it with:
@@ -23,7 +24,8 @@ asyncQuery(query, params)
 
 ---
 
-ready.controller.js
+### ready.controller.js
+
 Makes it possible to listen for connections once all other parts of the server are ready. i.e. no database calls to router before database server is ready, etc...
 
 in the file 'ready.controller.js' you set which events to listen for in the variable at the top: 'eventsToWaitFor'
@@ -37,5 +39,6 @@ Fail: readyController.emit('eventName:error')
 
 ---
 
-query.db.model.js
+### query.db.model.js
+
 Will setup all queries needed for databases, including loading them from files.
