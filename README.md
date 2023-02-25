@@ -33,9 +33,9 @@ in the file 'ready.controller.js' you set which events to listen for in the vari
 in any back-end javascript file, import it with:
 import readyController from '../controllers/ready.controller.js'
 
-and trigger events as following:
-Success: readyController.emit('eventName')
-Fail: readyController.emit('eventName:error')
+and trigger events as following (success and fail shown):
+readyController.emit('eventName')
+readyController.emit('eventName:error')
 
 ---
 
