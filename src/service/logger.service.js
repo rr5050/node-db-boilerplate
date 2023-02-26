@@ -1,7 +1,7 @@
 'use strict'
 import * as dotenv from 'dotenv'
 import log from 'simple-node-logger'
-import { isStringAndMinLength } from '../utils/misc.utils.js'
+import { isStringAndGreaterThanLength } from '../utils/misc.utils.js'
 
 /*
 	import:
@@ -24,7 +24,7 @@ const logOptions = {
 }
 
 // remove logging to file if a pathfile was not provided in environemt variables
-if (!isStringAndMinLength(process.env.LOG_PATHFILE)) {
+if (!isStringAndGreaterThanLength(process.env.LOG_PATHFILE, 0)) {
 	delete logOptions.logFilePath
 }
 
@@ -41,3 +41,4 @@ export const logger = log.createSimpleLogger(logOptions)
 	'fatal' : fatal
 */
 logger.setLevel(process.env.LOG_LEVEL)
+console.log('Here')

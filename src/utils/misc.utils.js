@@ -2,11 +2,11 @@
 
 // ****** check if input is a string with min length
 // checks in proper order to avoid errors
-export const isStringAndMinLength = (possibleString, minLength) => {
+export const isStringAndGreaterThanLength = (possibleString, greaterThanLength = 0) => {
 	if (
 		(possibleString && typeof possibleString == 'object') ||
 		typeof possibleString == 'function' ||
-		(typeof possibleString == 'string' && possibleString.length > 3)
+		(typeof possibleString == 'string' && possibleString.length > greaterThanLength)
 	) {
 		return true
 	} else {
