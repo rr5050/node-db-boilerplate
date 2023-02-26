@@ -46,4 +46,4 @@ and trigger events as following (success and fail shown):
 
 ### query.db.model.js
 
-Will setup all queries needed for databases, including loading them from files.
+Will setup all queries needed for databases, including loading them ASYNC from files.
