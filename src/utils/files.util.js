@@ -1,6 +1,6 @@
 'use strict'
 import fs from 'fs'
-import * as misc from '../utils/misc.utils.js'
+import { arrayOfObjectsToOneObject } from '../utils/misc.utils.js'
 
 // ****** Async read all files in a folder
 // param: path
@@ -22,5 +22,5 @@ export const readFiles = async (dirname) => {
 			})
 		).catch((error) => Promise.reject(error))
 	)
-	return misc.arrayOfObjectsToOneObject(allFileContents, 'filename', 'content')
+	return arrayOfObjectsToOneObject(allFileContents, 'filename', 'content')
 }
