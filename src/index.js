@@ -3,6 +3,7 @@ import readyController from './controllers/ready.controller.js'
 import express from 'express'
 import { asyncQuery } from './models/mariadb.db.model.js'
 import { QUERY } from './models/query.db.model.js'
+import { logger } from './service/logger.service.js'
 
 const app = express()
 
@@ -23,3 +24,5 @@ readyController.on('allReady', () => {
 readyController.emit('readyToListen')
 
 // TODO: add 'logger' everywhere
+
+logger.info('Server Started')
