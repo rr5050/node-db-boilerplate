@@ -13,3 +13,11 @@ export const isStringAndMinLength = (possibleString, minLength) => {
 		return false
 	}
 }
+
+// ****** converts an array of Objects into one Object
+// Example:
+//   Input:  [ { key: '11', value: '1100' }, { key: '22', value: '2200' } ]
+//   Output: { "11": "1100", "22": "2200" }
+export const arrayOfObjectsToOneObject = (arrayOfObjects, key, value) => {
+	return arrayOfObjects.reduce((obj, item) => ((obj[item[key]] = item[value]), obj), {})
+}

@@ -1,13 +1,6 @@
 'use strict'
 import fs from 'fs'
-
-// converts an array of Objects into one Object
-// Example:
-//   Input:  [ { key: '11', value: '1100' }, { key: '22', value: '2200' } ]
-//   Output: { "11": "1100", "22": "2200" }
-export const arrayOfObjectsToOneObject = (arrayOfObjects, key, value) => {
-	return arrayOfObjects.reduce((obj, item) => ((obj[item[key]] = item[value]), obj), {})
-}
+import * as misc from '../utils/misc.utils.js'
 
 // ****** Async read all files in a folder
 // param: path
@@ -29,5 +22,5 @@ export const readFiles = async (dirname) => {
 			})
 		).catch((error) => Promise.reject(error))
 	)
-	return arrayOfObjectsToOneObject(allFileContents, 'filename', 'content')
+	return misc.arrayOfObjectsToOneObject(allFileContents, 'filename', 'content')
 }
