@@ -19,7 +19,7 @@ const clientOptions = {
 	connectionLimit: process.env.DB_CONNECTION_LIMIT,
 }
 
-function dbErrorHandling(err) {
+const dbErrorHandling = (err) => {
 	const errorsThatWeWantToCrashNode = ['ER_DBACCESS_DENIED_ERROR', 'ER_ACCESS_DENIED_ERROR']
 	if (errorsThatWeWantToCrashNode.includes(err.code)) {
 		console.error(
@@ -37,13 +37,13 @@ function dbErrorHandling(err) {
 	}
 }
 
-function interceptFuturePoolErrors(newPool) {
+const interceptFuturePoolErrors = (newPool) => {
 	newPool.on('error', (err) => {
 		dbErrorHandling(err)
 	})
 }
 
-async function createPool() {
+const createPool = async () => {
 	let tmpConn
 	try {
 		tmpConn = await mariadb.createConnection(clientOptions)
@@ -58,7 +58,7 @@ async function createPool() {
 	}
 }
 
-export async function asyncQuery() {
+export const asyncQuery = async () => {
 	console.time('Query timer')
 	let conn
 	try {
@@ -85,7 +85,6 @@ export async function asyncQuery() {
 // TODO: validate the 'select 1 as val' query before next line
 // TODO: remove/cleanup console logging
 // TODO: check the catch(err) block for errors
-// TODO: re-write to arrow functions
 // TODO: setup readyController
 
 const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
