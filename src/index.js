@@ -19,10 +19,6 @@ app.get('/users', (req, res) => {
 })
 
 readyController.on('allReady', () => {
-	app.listen(3000, () => console.log(new Date(), 'Server Started'))
+	app.listen(3000, () => logger.info(`Server is running on port 3000`))
 })
 readyController.emit('readyToListen')
-
-// TODO: add 'logger' everywhere
-
-logger.info('Server Started')

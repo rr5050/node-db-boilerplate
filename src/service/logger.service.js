@@ -41,4 +41,3 @@ export const logger = log.createSimpleLogger(logOptions)
 	'fatal' : fatal
 */
 logger.setLevel(process.env.LOG_LEVEL)
-console.log('Here')

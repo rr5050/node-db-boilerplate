@@ -7,11 +7,12 @@
 //
 // To start the Node server, use this:
 //    readyController.on('allReady', () => {
-// 	    app.listen(3000, () => console.log('Server Started'))
+//		app.listen(3000, () => logger.info(`Server is running on port 3000`))
 //    })
 //    readyController.emit('StartServer')
 
 import { EventEmitter } from 'node:events'
+import { logger } from '../service/logger.service.js'
 
 class MyEmitter extends EventEmitter {}
 
@@ -23,19 +24,19 @@ const waitEvent = (event) => {
 	return new Promise((resolve, reject) => {
 		myEmitter.once(event, () => {
 			setImmediate(() => {
-				console.log(new Date(), 'readyController - Event resolved: ' + event)
+				logger.info('readyController - Event resolved: ' + event)
 				resolve()
 			})
 		})
 		myEmitter.once(event + ':error', () => {
 			setImmediate(() => {
-				console.error(new Date(), 'readyController - Event rejected: ' + event)
+				logger.warn('readyController - Event rejected: ' + event)
 				reject()
 			})
 		})
 		myEmitter.once('error', () => {
 			setImmediate(() => {
-				console.error(new Date(), 'readyController - An unknown event was rejected')
+				logger.warn('readyController - An unknown event was rejected')
 				reject()
 			})
 		})
@@ -44,7 +45,7 @@ const waitEvent = (event) => {
 
 const waitForAll = async () => {
 	let pendingEvents = []
-	console.log(new Date(), 'readyController - Waiting for events: ' + eventsToWaitFor.join(', '))
+	logger.info('readyController - Waiting for events: ' + eventsToWaitFor.join(', '))
 	eventsToWaitFor.forEach((event) => {
 		pendingEvents.push(waitEvent(event))
 	})
@@ -53,14 +54,14 @@ const waitForAll = async () => {
 
 waitForAll()
 	.then(() => {
-		console.log(new Date(), 'readyController - All events resolved')
+		logger.info('readyController - All events resolved')
 		myEmitter.emit('allReady')
 	})
 	.catch(() => {
-		console.error(
-			new Date(),
-			'readyController - Some events was rejected. Server will not start'
-		)
+		logger.fatal('readyController - Some events was rejected. Server will not start')
+		setTimeout(() => {
+			process.exit() // exit process after a timeout - to let logger log to file and console
+		}, 5000)
 	})
 
 export default myEmitter
