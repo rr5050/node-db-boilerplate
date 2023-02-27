@@ -58,6 +58,8 @@ const createPool = async () => {
 	}
 }
 
+var pool = null
+
 export const asyncQuery = async () => {
 	console.time('Query timer')
 	let conn
@@ -66,6 +68,7 @@ export const asyncQuery = async () => {
 			console.error(new Date(), 'Mariadb: pool unavailable. Creating a new one.')
 			pool = await createPool()
 		}
+		console.log('Here')
 		conn = await pool.getConnection()
 		const rows = await conn.query('SELECT 1 as val')
 		console.log(rows)
@@ -89,9 +92,9 @@ export const asyncQuery = async () => {
 
 const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
 const params = [1]
+// asyncQuery()
 
 /* 
-// asyncQuery()
 var pool = await createPool()
 
 

@@ -20,5 +20,6 @@ app.get('/users', (req, res) => {
 
 readyController.on('allReady', () => {
 	app.listen(3000, () => logger.info(`Server is running on port 3000`))
+	asyncQuery()
 })
 readyController.emit('readyToListen')
