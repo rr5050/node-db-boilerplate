@@ -20,6 +20,9 @@ app.get('/users', (req, res) => {
 
 readyController.on('allReady', () => {
 	app.listen(3000, () => logger.info(`Server is running on port 3000`))
-	asyncQuery()
+
+	const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
+	const params = [1]
+	asyncQuery(myQuery, params)
 })
 readyController.emit('readyToListen')

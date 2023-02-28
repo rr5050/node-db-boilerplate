@@ -61,7 +61,7 @@ const createPool = async () => {
 
 var pool = null
 
-export const asyncQuery = async () => {
+export const asyncQuery = async (myQuery, params) => {
 	console.time('Query timer')
 	let conn
 	try {
@@ -84,15 +84,14 @@ export const asyncQuery = async () => {
 	}
 }
 
-// TODO: query parameters
 // TODO: return query results
 // TODO: validate the 'select 1 as val' query before next line
 // TODO: remove/cleanup console logging
 // TODO: check the catch(err) block for errors
 // TODO: setup readyController
 
-const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
-const params = [1]
+// const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
+// const params = [1]
 // asyncQuery()
 
 /* 
