@@ -1,5 +1,6 @@
 'use strict'
 import * as dotenv from 'dotenv'
+import { logger } from '../service/logger.service.js'
 import readyController from '../controllers/ready.controller.js'
 import mariadb from 'mariadb'
 
@@ -22,15 +23,15 @@ const clientOptions = {
 const dbErrorHandling = (err) => {
 	const errorsThatWeWantToCrashNode = ['ER_DBACCESS_DENIED_ERROR', 'ER_ACCESS_DENIED_ERROR']
 	if (errorsThatWeWantToCrashNode.includes(err.code)) {
-		console.error(
-			new Date(),
-			'Mariadb: access denied. Check credentials: user, password, database:\n',
+		logger.info(
+			'Mariadb: access denied. Check credentials: user, password, database: ',
 			err.code
 		)
-		process.exit(1)
+		setTimeout(() => {
+			process.exit(1)
+		}, 3000)
 	} else {
-		console.error(
-			new Date(),
+		logger.warn(
 			'Mariadb: error suppressed (Node not crashing) (check credentials: host, port):',
 			err.code
 		)
@@ -65,7 +66,7 @@ export const asyncQuery = async () => {
 	let conn
 	try {
 		if (!pool) {
-			console.error(new Date(), 'Mariadb: pool unavailable. Creating a new one.')
+			logger.info('Mariadb: pool unavailable. Creating a new one.')
 			pool = await createPool()
 		}
 		console.log('Here')
