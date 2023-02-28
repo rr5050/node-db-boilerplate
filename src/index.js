@@ -1,7 +1,7 @@
 'use strict'
 import readyController from './controllers/ready.controller.js'
 import express from 'express'
-import { asyncQuery } from './models/mariadb.db.model.js'
+import { asyncQuery, asyncQueryArray } from './models/mariadb.db.model.js'
 import { QUERY } from './models/query.db.model.js'
 import { logger } from './service/logger.service.js'
 
@@ -20,9 +20,14 @@ app.get('/users', (req, res) => {
 
 readyController.on('allReady', () => {
 	app.listen(3000, () => logger.info(`Server is running on port 3000`))
-
-	const myQuery = 'SELECT * FROM patientsdb.patients where id = ? '
-	const params = [1]
-	asyncQuery(myQuery, params)
 })
 readyController.emit('readyToListen')
+;(async () => {
+	const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
+	const params = [1]
+	const res = await asyncQuery(myQuery, params)
+	console.log(res)
+
+	const resarray = await asyncQueryArray(myQuery, params)
+	console.log(resarray)
+})()
