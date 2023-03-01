@@ -23,10 +23,12 @@ readyController.on('allReady', () => {
 })
 readyController.emit('readyToListen')
 
+// test mariadb with 2 queries
 setTimeout(() => {
 	;(async () => {
 		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
 		const params = [1]
+
 		const res = await asyncQuery(myQuery, params)
 		console.log(res)
 
