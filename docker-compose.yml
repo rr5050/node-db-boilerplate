@@ -10,14 +10,14 @@ services:
             - ./src/db/sql/initdb:/docker-entrypoint-initdb.d:ro
             - mariadb-data:/var/lib/mysql:rw
         ports:
-            - ${DB_PORT}:${DB_PORT}
+            - ${MARIADB_PORT}:${MARIADB_PORT}
         environment:
-            MYSQL_HOST: ${DB_HOST}
-            MYSQL_TCP_PORT: ${DB_PORT}
-            MYSQL_USER: ${DB_USER}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${DB_NAME}
+            MYSQL_HOST: ${MARIADB_HOST}
+            MYSQL_TCP_PORT: ${MARIADB_PORT}
+            MYSQL_USER: ${MARIADB_USER}
+            MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MARIADB_NAME}
             SERVICE_NAME: mariadb
             SERVICE_TAGS: dev
         networks:
@@ -27,14 +27,16 @@ services:
         image: redis:latest
         container_name: redis
         restart: unless-stopped
-        # entrypoint: redis-server --appendonly yes --requirepass $REDIS_PASSWORD --maxmemory 512mb --maxmemory-policy allkeys-lru
+        command: >
+            --requirepass ${REDIS_PASSWORD}
+            --bind ${REDIS_IP_LISTEN_FOR_CONNECTIONS_FROM}
+            --port ${REDIS_PORT}
+            --loglevel ${REDIS_LOGLEVEL}
         ports:
-            - 6379:6379
+            - ${REDIS_PORT}:${REDIS_PORT}
         volumes:
-            - redis-data:/usr/local/etc/redis
-            - redis-data:/data
-        environment:
-            - ALLOW_EMPTY_PASSWORD=yes
+            - redis-data:/usr/local/etc/redis:rw
+            - redis-data:/data:rw
         networks:
             - developmentnet
 
