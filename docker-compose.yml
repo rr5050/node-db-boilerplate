@@ -1,29 +1,47 @@
+version: '2'
+
 services:
-  mariadb:
-    image: mariadb:latest
-    container_name: mariadb
-    command: --default-authentication-plugin=mysql_native_password
-    restart: unless-stopped
-    volumes:
-      - ./src/db/sql/initdb:/docker-entrypoint-initdb.d:ro
-      - mariadb-data:/var/lib/mysql:rw
-    ports:
-      - ${DB_PORT}:${DB_PORT}
-    environment:
-      MYSQL_HOST: ${DB_HOST}
-      MYSQL_TCP_PORT: ${DB_PORT}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      SERVICE_NAME: mariadb
-      SERVICE_TAGS: dev
-    networks:
-      - developmentnet
+    mariadb:
+        image: mariadb:latest
+        container_name: mariadb
+        command: --default-authentication-plugin=mysql_native_password
+        restart: unless-stopped
+        volumes:
+            - ./src/db/sql/initdb:/docker-entrypoint-initdb.d:ro
+            - mariadb-data:/var/lib/mysql:rw
+        ports:
+            - ${DB_PORT}:${DB_PORT}
+        environment:
+            MYSQL_HOST: ${DB_HOST}
+            MYSQL_TCP_PORT: ${DB_PORT}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DB_NAME}
+            SERVICE_NAME: mariadb
+            SERVICE_TAGS: dev
+        networks:
+            - developmentnet
+
+    redis:
+        image: redis:latest
+        container_name: redis
+        restart: unless-stopped
+        # entrypoint: redis-server --appendonly yes --requirepass $REDIS_PASSWORD --maxmemory 512mb --maxmemory-policy allkeys-lru
+        ports:
+            - 6379:6379
+        volumes:
+            - redis-data:/usr/local/etc/redis
+            - redis-data:/data
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+        networks:
+            - developmentnet
 
 volumes:
-  mariadb-data:
+    mariadb-data:
+    redis-data:
 
 networks:
-  developmentnet:
-    driver: bridge
+    developmentnet:
+        driver: bridge
