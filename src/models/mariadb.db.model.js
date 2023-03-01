@@ -15,12 +15,12 @@ import mariadb from 'mariadb'
 dotenv.config()
 
 const clientOptions = {
-	host: process.env.DB_HOST,
-	port: process.env.DB_PORT,
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_NAME,
-	connectionLimit: process.env.DB_CONNECTION_LIMIT,
+	host: process.env.MARIADB_HOST,
+	port: process.env.MARIADB_PORT,
+	user: process.env.MARIADB_USER,
+	password: process.env.MARIADB_PASSWORD,
+	database: process.env.MARIADB_NAME,
+	connectionLimit: process.env.MARIADB_CONNECTION_LIMIT,
 }
 
 const dbErrorHandling = (err) => {
