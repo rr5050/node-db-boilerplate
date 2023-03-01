@@ -5,8 +5,6 @@
     docker-compose up -d
     npm run dev
 
-Status: Still errors/unfinished code here, so not usable as a final product for anyone yet. But can give some ideas for how to use MariaDB for example :)
-
 ### Docker-compose
 
 Will setup a MariaDB server with a docker volume to contain the database. If it's not present at startup, the database will be started and then initialized with files in the folder './src/db/sql/initdb' - using them in an alfabetically order.
@@ -17,13 +15,16 @@ Will setup a MariaDB server with a docker volume to contain the database. If it'
 
 Has been specifically setup to recover from most errors. You still need to write proper SQL and handle results properly.
 
-in any back-end javascript file, import it with:
+in any back-end javascript file, import it with one of these:
 
-    import { asyncQuery } from './models/mariadb.db.model.js'
+    import { asyncQuery } from '../models/mariadb.db.model.js'
+    import { asyncQueryArray } from '../models/mariadb.db.model.js'
+    import { asyncQuery, asyncQueryArray } from '../models/mariadb.db.model.js'
 
-and call it with the async function (with await):
+and call it with one of these async functions with await:
 
     asyncQuery(query, params)
+    asyncQueryArray(query, params)
 
 ---
 
