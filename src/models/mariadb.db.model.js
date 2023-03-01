@@ -4,26 +4,30 @@ import { logger } from '../service/logger.service.js'
 import readyController from '../controllers/ready.controller.js'
 import mariadb from 'mariadb'
 
+/*
+	import:
+		import { asyncQuery, asyncQueryArray } from '../models/mariadb.db.model.js'
+
+	Usage:
+		See description on functions below for: asyncQuery, asyncQueryArray
+*/
+
 dotenv.config()
 
 const clientOptions = {
 	host: process.env.DB_HOST,
-	// host: '192.168.0.0',
 	port: process.env.DB_PORT,
-	// port: '1000',
 	user: process.env.DB_USER,
-	// user: 'wronguser',
 	password: process.env.DB_PASSWORD,
-	// password: 'passwordwrong',
 	database: process.env.DB_NAME,
-	// database: 'wrongdatabase',
 	connectionLimit: process.env.DB_CONNECTION_LIMIT,
 }
 
 const dbErrorHandling = (err) => {
 	const errorsThatWeWantToCrashNode = ['ER_DBACCESS_DENIED_ERROR', 'ER_ACCESS_DENIED_ERROR']
+	console.log(err.poolCreationError)
 	if (errorsThatWeWantToCrashNode.includes(err.code)) {
-		logger.info(
+		logger.fatal(
 			'Mariadb: access denied. Check credentials: user, password, database: ',
 			err.code
 		)
@@ -31,11 +35,14 @@ const dbErrorHandling = (err) => {
 			process.exit(1)
 		}, 3000)
 	} else {
-		logger.warn(
-			'Mariadb: error suppressed (Node not crashing) (check credentials: host, port): ',
-			err.code,
-			err.message
+		logger.error('Mariadb: error suppressed: ', err.code + ', ' + err.message)
+	}
+	if (err.poolCreationError === 'true') {
+		logger.error(
+			'Mariadb: could not create a pool. Check credentials: user, password, database, host, port: ',
+			err.code
 		)
+		readyController.emit('mariadb.db.model:error')
 	}
 }
 
@@ -49,7 +56,6 @@ const createPool = async () => {
 	let tmpConn
 	try {
 		tmpConn = await mariadb.createConnection(clientOptions)
-
 		const rows = await tmpConn.query('SELECT 1 as ok')
 		if (!(rows[0].ok === 1)) {
 			throw new Error('test connection query failed while creating pool')
@@ -57,8 +63,10 @@ const createPool = async () => {
 
 		const newPool = mariadb.createPool(clientOptions)
 		interceptFuturePoolErrors(newPool)
+		readyController.emit('mariadb.db.model')
 		return newPool
 	} catch (err) {
+		err.poolCreationError = 'true'
 		dbErrorHandling(err)
 	} finally {
 		if (tmpConn) tmpConn.end()
@@ -99,11 +107,11 @@ export const asyncQuery = async (myQuery, params) => {
 		// send the actual query
 		res = await conn.query(myQuery, params)
 	} catch (err) {
-		logger.error('Mariadb: ', err.message)
+		dbErrorHandling(err)
 	} finally {
 		console.timeEnd('Query timer')
 		if (conn) conn.release()
-		return res // will contain null or result
+		return res // will contain result, or null if failed
 	}
 }
 
@@ -114,13 +122,13 @@ export const asyncQueryArray = async (myQuery, params) => {
 	return await asyncQuery(myQuery, params)
 }
 
-// TODO: setup readyController with createpool
-
-/* 
-var pool = await createPool()
-
-
-console.log('Total connections: ', pool.totalConnections())
-console.log('Active connections: ', pool.activeConnections())
-console.log('Idle connections: ', pool.idleConnections())
-*/
+// create a pool on startup, so we can check log right away for any errors
+;(async () => {
+	try {
+		if (!pool) {
+			pool = await createPool()
+		}
+	} catch (error) {
+		dbErrorHandling(err)
+	}
+})()

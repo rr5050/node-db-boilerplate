@@ -22,12 +22,15 @@ readyController.on('allReady', () => {
 	app.listen(3000, () => logger.info(`Server is running on port 3000`))
 })
 readyController.emit('readyToListen')
-;(async () => {
-	const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
-	const params = [1]
-	const res = await asyncQuery(myQuery, params)
-	console.log(res)
 
-	const resarray = await asyncQueryArray(myQuery, params)
-	console.log(resarray)
-})()
+setTimeout(() => {
+	;(async () => {
+		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
+		const params = [1]
+		const res = await asyncQuery(myQuery, params)
+		console.log(res)
+
+		const resarray = await asyncQueryArray(myQuery, params)
+		console.log(resarray)
+	})()
+}, 5000)

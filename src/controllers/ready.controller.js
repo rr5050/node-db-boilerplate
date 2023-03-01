@@ -18,7 +18,7 @@ class MyEmitter extends EventEmitter {}
 
 const myEmitter = new MyEmitter()
 
-const eventsToWaitFor = ['readyToListen', 'query.db.model']
+const eventsToWaitFor = ['readyToListen', 'mariadb.db.model', 'query.db.model']
 
 const waitEvent = (event) => {
 	return new Promise((resolve, reject) => {
