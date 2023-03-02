@@ -2,6 +2,8 @@
 import readyController from './controllers/ready.controller.js'
 import express from 'express'
 import { asyncQuery, asyncQueryArray } from './models/mariadb.db.model.js'
+import { redis } from './models/redis.db.model.js'
+
 import { QUERY } from './models/query.db.model.js'
 import { logger } from './service/logger.service.js'
 
@@ -23,16 +25,16 @@ readyController.on('allReady', () => {
 })
 readyController.emit('readyToListen')
 
-// test mariadb with 2 queries
-setTimeout(() => {
-	;(async () => {
-		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
-		const params = [1]
+// ---------------------------------------------------------- test mariadb with 2 queries
+// setTimeout(() => {
+// 	;(async () => {
+// 		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
+// 		const params = [1]
 
-		const res = await asyncQuery(myQuery, params)
-		console.log(res)
+// 		const res = await asyncQuery(myQuery, params)
+// 		console.log(res)
 
-		const resarray = await asyncQueryArray(myQuery, params)
-		console.log(resarray)
-	})()
-}, 5000)
+// 		const resarray = await asyncQueryArray(myQuery, params)
+// 		console.log(resarray)
+// 	})()
+// }, 5000)
