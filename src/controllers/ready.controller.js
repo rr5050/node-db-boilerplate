@@ -16,25 +16,25 @@ import { logger } from '../service/logger.service.js'
 
 class MyEmitter extends EventEmitter {}
 
-const myEmitter = new MyEmitter()
+const readyController = new MyEmitter()
 
-const eventsToWaitFor = ['readyToListen', 'mariadb.db.model', 'query.db.model']
+const eventsToWaitFor = ['readyToListen', 'mariadb.db.model', 'redis.db.model', 'query.db.model']
 
 const waitEvent = (event) => {
 	return new Promise((resolve, reject) => {
-		myEmitter.once(event, () => {
+		readyController.once(event, () => {
 			setImmediate(() => {
 				logger.info('readyController - Event resolved: ' + event)
 				resolve()
 			})
 		})
-		myEmitter.once(event + ':error', () => {
+		readyController.once(event + ':error', () => {
 			setImmediate(() => {
 				logger.warn('readyController - Event rejected: ' + event)
 				reject()
 			})
 		})
-		myEmitter.once('error', () => {
+		readyController.once('error', () => {
 			setImmediate(() => {
 				logger.warn('readyController - An unknown event was rejected')
 				reject()
@@ -55,7 +55,7 @@ const waitForAll = async () => {
 waitForAll()
 	.then(() => {
 		logger.info('readyController - All events resolved')
-		myEmitter.emit('allReady')
+		readyController.emit('allReady')
 	})
 	.catch(() => {
 		logger.fatal('readyController - Some events was rejected. Server will not start')
@@ -64,4 +64,4 @@ waitForAll()
 		}, 5000)
 	})
 
-export default myEmitter
+export default readyController

@@ -1,21 +1,23 @@
 'use strict'
+import * as config from './config/misc.config.js'
 import readyController from './controllers/ready.controller.js'
 import express from 'express'
 import { asyncQuery, asyncQueryArray } from './models/mariadb.db.model.js'
-import { redis } from './models/redis.db.model.js'
-
+import redis from './models/redis.db.model.js'
 import { QUERY } from './models/query.db.model.js'
 import { logger } from './service/logger.service.js'
+import SqlString from 'sqlstring'
 
 const app = express()
 
 app.get('/', (req, res) => {
+	console.log('------------------------ NEW PAGE REFRESH ------------------------')
 	res.send(`Home page`)
-	asyncQuery()
 	console.log('home page')
 })
 
 app.get('/users', (req, res) => {
+	console.log('======================== NEW PAGE REFRESH ========================')
 	res.send('Users Page')
 	console.log('Users page')
 })
@@ -26,15 +28,53 @@ readyController.on('allReady', () => {
 readyController.emit('readyToListen')
 
 // ---------------------------------------------------------- test mariadb with 2 queries
+
 // setTimeout(() => {
 // 	;(async () => {
 // 		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
 // 		const params = [1]
 
-// 		const res = await asyncQuery(myQuery, params)
+// 		let res = await asyncQuery(myQuery, params)
 // 		console.log(res)
 
-// 		const resarray = await asyncQueryArray(myQuery, params)
+// 		res = await asyncQuery(myQuery, params)
+// 		res = JSON.stringify(res)
+// 		console.log(res)
+
+// 		res = JSON.parse(res)
+// 		console.log(res)
+
+// 		console.log('*************************************')
+
+// 		let resarray = await asyncQueryArray(myQuery, params)
+// 		console.log(resarray)
+
+// 		resarray = JSON.stringify(resarray)
+// 		console.log(resarray)
+
+// 		resarray = JSON.parse(resarray)
 // 		console.log(resarray)
 // 	})()
-// }, 5000)
+// }, 1000)
+
+// let arr2 = [10, 20, 30, 'rino']
+// let newstring4 = SqlString.format('generation 2: ?, ?, ?, ?', arr2)
+// console.log(newstring4)
+//
+//redis testing
+//
+// const keyParam = 'mykey'
+// const valueParam = 'redis testing: rinorabe (from index.js)#2'
+// redis.call('set', keyParam, valueParam)
+// redis.get('mykey').then((result) => {
+// 	console.log(result)
+// })
+//
+// redis
+// 	.customGet('mykey')
+// 	.then((result) => {
+// 		console.log('Result from redis.get function = ', result)
+// 	})
+// 	.catch((error) => {
+// 		console.log('Error from redis.get function = ', error)
+// 	})

@@ -1,5 +1,4 @@
 'use strict'
-import * as dotenv from 'dotenv'
 import { logger } from '../service/logger.service.js'
 import readyController from '../controllers/ready.controller.js'
 import mariadb from 'mariadb'
@@ -11,8 +10,6 @@ import mariadb from 'mariadb'
 	Usage:
 		See description on functions below for: asyncQuery, asyncQueryArray
 */
-
-dotenv.config()
 
 const clientOptions = {
 	host: process.env.MARIADB_HOST,

@@ -21,3 +21,14 @@ export const isStringAndGreaterThanLength = (possibleString, greaterThanLength =
 export const arrayOfObjectsToOneObject = (arrayOfObjects, key, value) => {
 	return arrayOfObjects.reduce((obj, item) => ((obj[item[key]] = item[value]), obj), {})
 }
+
+// ****** A replacement function for 'JSON.stringify'.
+// https://stackoverflow.com/questions/58249954/json-stringify-and-postgresql-bigint-compliance
+export const toJson = (data) => {
+	if (data !== undefined) {
+		return JSON.stringify(data, (_, v) => (typeof v === 'bigint' ? `${v}#bigint` : v)).replace(
+			/"(-?\d+)#bigint"/g,
+			(_, a) => a
+		)
+	}
+}

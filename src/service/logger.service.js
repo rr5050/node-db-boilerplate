@@ -1,9 +1,6 @@
 'use strict'
-import * as dotenv from 'dotenv'
 import log from 'simple-node-logger'
 import { isStringAndGreaterThanLength } from '../utils/misc.utils.js'
-
-dotenv.config()
 
 /*
 	import:
