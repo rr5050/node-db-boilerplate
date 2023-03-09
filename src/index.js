@@ -2,7 +2,7 @@
 import * as config from './config/misc.config.js'
 import readyController from './controllers/ready.controller.js'
 import express from 'express'
-import { asyncQuery, asyncQueryArray } from './models/mariadb.db.model.js'
+import mariadb from './models/mariadb.db.model.js'
 import redis from './models/redis.db.model.js'
 import { QUERY } from './models/query.db.model.js'
 import { logger } from './service/logger.service.js'
@@ -34,10 +34,10 @@ readyController.emit('readyToListen')
 // 		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
 // 		const params = [1]
 
-// 		let res = await asyncQuery(myQuery, params)
+// 		let res = await mariadb.asyncQuery(myQuery, params)
 // 		console.log(res)
 
-// 		res = await asyncQuery(myQuery, params)
+// 		res = await mariadb.asyncQuery(myQuery, params)
 // 		res = JSON.stringify(res)
 // 		console.log(res)
 
@@ -46,7 +46,7 @@ readyController.emit('readyToListen')
 
 // 		console.log('*************************************')
 
-// 		let resarray = await asyncQueryArray(myQuery, params)
+// 		let resarray = await mariadb.asyncQueryArray(myQuery, params)
 // 		console.log(resarray)
 
 // 		resarray = JSON.stringify(resarray)
