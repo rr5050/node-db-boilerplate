@@ -7,7 +7,7 @@ services:
         command: --default-authentication-plugin=mysql_native_password
         restart: unless-stopped
         volumes:
-            - ./src/db/sql/initdb:/docker-entrypoint-initdb.d:ro
+            - ./src/config/init-mariadb:/docker-entrypoint-initdb.d:ro
             - mariadb-data:/var/lib/mysql:rw
         ports:
             - ${MARIADB_PORT}:${MARIADB_PORT}

@@ -8,6 +8,7 @@ const querySettings = async (folder) => {
 	try {
 		let tmpQuery
 		const allFileContent = await readFiles(folder)
+
 		const sqlfile = (filename) => {
 			const fileContent = allFileContent[filename]
 			if (fileContent === undefined) {
@@ -16,6 +17,7 @@ const querySettings = async (folder) => {
 				throw new Error('query.db.model - Could not read a file')
 			} else return fileContent
 		}
+
 		tmpQuery = {
 			SELECT_PATIENT: {
 				sql: sqlfile('000_dbinit.sql'),
@@ -33,7 +35,7 @@ const querySettings = async (folder) => {
 	}
 }
 
-export const QUERY = await querySettings('./src/db/sql/initdb/')
+export const QUERY = await querySettings('./src/config/init-mariadb/')
 
 // TODO: fill in some queries
 // TODO: change the directory to scan for files to the correct folder
