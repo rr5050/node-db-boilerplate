@@ -4,7 +4,7 @@ import readyController from './controllers/ready.controller.js'
 import express from 'express'
 import mariadb from './models/mariadb.db.model.js'
 import redis from './models/redis.db.model.js'
-import { QUERY } from './models/query.db.model.js'
+import QUERY from './models/query.db.model.js'
 import { logger } from './service/logger.service.js'
 import SqlString from 'sqlstring'
 

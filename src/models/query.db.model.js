@@ -3,10 +3,10 @@ import readyController from '../controllers/ready.controller.js'
 import { readFiles } from '../utils/files.util.js'
 
 const readyControllerWaitForEvent = 'query.db.model'
+const pathToSQLfiles = './src/config/init-mariadb/'
 
 const querySettings = async (folder) => {
 	try {
-		let tmpQuery
 		const allFileContent = await readFiles(folder)
 
 		const sqlfile = (filename) => {
@@ -18,9 +18,9 @@ const querySettings = async (folder) => {
 			} else return fileContent
 		}
 
-		tmpQuery = {
-			SELECT_PATIENT: {
-				sql: sqlfile('000_dbinit.sql'),
+		const tmpQuery = {
+			userID_isAdmin: {
+				sql: `call create_player_login_return_playerid_admin(?,?,?)`, // ? = player_name, email, admin
 				redis: {
 					key: 'test1 nissen',
 					deletekeys: sqlfile('000_dbinit.sql'),
@@ -35,7 +35,9 @@ const querySettings = async (folder) => {
 	}
 }
 
-export const QUERY = await querySettings('./src/config/init-mariadb/')
+const QUERY = await querySettings(pathToSQLfiles)
+
+export default QUERY
 
 // TODO: fill in some queries
 // TODO: change the directory to scan for files to the correct folder

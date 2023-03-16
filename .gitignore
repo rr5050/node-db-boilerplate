@@ -148,3 +148,5 @@ dist
 /test.js
 /package-lock.json
 /.vscode/*
+/*.mwb
+/*.mwb.bak
