@@ -1,36 +1,57 @@
 USE rpgdb;
-DROP PROCEDURE IF EXISTS `create_player_login_return_playerid_admin`;
+DROP PROCEDURE IF EXISTS sp_create_player_login_return_playerid_admin;
 delimiter //
 
-CREATE PROCEDURE create_player_login_return_playerid_admin(IN player_name VARCHAR(255), IN email VARCHAR(255), IN admin TINYINT(4))
+CREATE PROCEDURE sp_create_player_login_return_playerid_admin(IN var_player_name VARCHAR(255), IN var_email VARCHAR(255), IN var_is_admin TINYINT(4))
           BEGIN
-               INSERT INTO
-                    `rpgdb`.`players`
+               IF
+                     (
+                         SELECT
+                              EXISTS
+                              (
+                                   SELECT
+                                        1
+                                   FROM
+                                        `logins`
+                                   WHERE
+                                        `email` = var_email
+                                   LIMIT 1)     = 0)
+               THEN
+                    /* login entries doesn't exists. need to create them */
+                    START transaction;
+                    INSERT INTO
+                         `players`
+                              (
+                                   `player_name`
+                              )
+                    VALUES
                          (
-                              `player_name`
+                              var_player_name
                          )
-               VALUES
-                    (
-                         player_name
-                    )
-               ;
-               SET @player_id = last_insert_id();
-               INSERT INTO
-                    `rpgdb`.`logins`
+                    ;
+                    INSERT INTO
+                         `logins`
+                              (
+                                   `email`
+                                 , `is_admin`
+                                 , `players_id`
+                              )
+                    VALUES
                          (
-                              `email`
-                            , `admin`
-                            , `players_id`
+                              var_email
+                            , var_is_admin
+                            , last_insert_id()
                          )
-               VALUES
-                    (
-                         email
-                       , admin
-                       , @player_id
-                    )
-               ;
+                    ;
+                    COMMIT;
+               END IF;
+               /* create return data */
                SELECT
-                    @player_id AS player_id
-                  , admin;
+                    `players_id`
+                  , `is_admin`
+               FROM
+                    `logins`
+               WHERE
+                    `email` = var_email;
           END //
-delimiter ;
+     delimiter ;

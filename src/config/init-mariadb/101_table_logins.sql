@@ -4,7 +4,7 @@ CREATE TABLE `logins`
      (
           `id`         BIGINT(20)unsigned NOT NULL auto_increment
         , `email`      VARCHAR(255)NOT NULL
-        , `admin`      TINYINT(4)NOT NULL DEFAULT 0
+        , `is_admin`   TINYINT(4)NOT NULL DEFAULT 0
         , `players_id` BIGINT(20)unsigned NOT NULL
         , PRIMARY KEY(`id`, `players_id`)
         , UNIQUE KEY `uq_patients_email`(`email`)

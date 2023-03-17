@@ -20,7 +20,7 @@ const querySettings = async (folder) => {
 
 		const tmpQuery = {
 			userID_isAdmin: {
-				sql: `call create_player_login_return_playerid_admin(?,?,?)`, // ? = player_name, email, admin
+				sql: `call sp_create_player_login_return_playerid_admin(?,?,?)`, // input: player_name, email, is_admin. Output: players_id, is_admin
 				redis: {
 					key: 'test1 nissen',
 					deletekeys: sqlfile('000_dbinit.sql'),
