@@ -2,7 +2,7 @@ USE rpgdb;
 DROP PROCEDURE IF EXISTS sp_create_player_login_return_playerid_admin;
 delimiter //
 
-CREATE PROCEDURE sp_create_player_login_return_playerid_admin(IN var_player_name VARCHAR(255), IN var_email VARCHAR(255), IN var_is_admin TINYINT(4))
+CREATE PROCEDURE sp_create_player_login_return_playerid_admin(IN var_player_name VARCHAR(255), IN var_email VARCHAR(255))
           BEGIN
                IF
                      (
@@ -39,7 +39,7 @@ CREATE PROCEDURE sp_create_player_login_return_playerid_admin(IN var_player_name
                     VALUES
                          (
                               var_email
-                            , var_is_admin
+                            , 0
                             , last_insert_id()
                          )
                     ;
