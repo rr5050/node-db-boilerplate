@@ -12,7 +12,7 @@
 //    readyController.emit('StartServer')
 
 import { EventEmitter } from 'node:events'
-import { logger } from '../service/logger.service.js'
+import logger from '../service/logger.service.js'
 
 class MyEmitter extends EventEmitter {}
 

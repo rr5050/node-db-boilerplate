@@ -1,5 +1,5 @@
 'use strict'
-import { logger } from '../service/logger.service.js'
+import logger from '../service/logger.service.js'
 import readyController from '../controllers/ready.controller.js'
 import Mariadb from 'mariadb'
 

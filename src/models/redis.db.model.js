@@ -1,6 +1,6 @@
 'use strict'
 import readyController from '../controllers/ready.controller.js'
-import { logger } from '../service/logger.service.js'
+import logger from '../service/logger.service.js'
 import { Redis } from 'ioredis'
 
 class MyRedis extends Redis {
@@ -113,7 +113,13 @@ class MyRedis extends Redis {
 	customCall = async (...params) => {
 		try {
 			await this.updateConnection()
-			const output = await super.Call(...params)
+			// const output = await super.call('set', ...params)
+			const output = await super.call(
+				'set',
+				'rino',
+				Buffer.from(`[{"players_id":3,"is_admin":1}]`)
+			)
+			// const output = await super.call('get', 'rino')
 			return output
 		} catch (err) {
 			logger.error('Redis: error @ customCall: ', err)
@@ -125,3 +131,10 @@ class MyRedis extends Redis {
 const redis = new MyRedis()
 
 export default redis
+
+// TODO: create support for MULTI/EXEC commands:
+// const replies = await client
+// 	.multi()
+// 	.call('JSON.SET', 'key', JSON.stringify({ field: 'value' }))
+// 	.call('JSON.GET', 'key', '$')
+//     .exec()
