@@ -19,11 +19,11 @@ const querySettings = async (folder) => {
 		}
 
 		const tmpQuery = {
-			userID_isAdmin: {
-				sql: `call sp_create_player_login_return_playerid_admin(?,?)`, // input: player_name, email. Output: players_id, is_admin
+			create_player_login_return_playerid_admin: {
+				sql: `call sp_create_player_login_return_playerid_admin(?,?,?)`, // input: email, is_admin, player_name. Output: players_id, is_admin
 				redis: {
-					key: 'test1 nissen',
-					deletekeys: sqlfile('000_dbinit.sql'),
+					get: 'hget login ?', // input: email. Output: players_id, is_admin
+					set: 'hset login ? ?', // input: email, (players_id, is_admin)
 				},
 			},
 		}

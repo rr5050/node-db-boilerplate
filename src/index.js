@@ -5,7 +5,8 @@ import express from 'express'
 import mariadb from './models/mariadb.db.model.js'
 import redis from './models/redis.db.model.js'
 import QUERY from './models/query.db.model.js'
-import { logger } from './service/logger.service.js'
+import cachedb from './models/cache.db.model.js'
+import logger from './service/logger.service.js'
 import SqlString from 'sqlstring'
 
 const app = express()
@@ -31,29 +32,31 @@ readyController.emit('readyToListen')
 
 // setTimeout(() => {
 // 	;(async () => {
-// 		const myQuery = 'SELECT * FROM patientsdb.patients where id = ?'
-// 		const params = [1]
+// 		const myQuery = QUERY.create_player_login_return_playerid_admin.sql
+// 		const params = ['test og nissen2', 'max3@hei.hopp', 1]
 
+// 		console.time('Timer')
 // 		let res = await mariadb.asyncQuery(myQuery, params)
+// 		console.timeEnd('Timer')
 // 		console.log(res)
 
-// 		res = await mariadb.asyncQuery(myQuery, params)
-// 		res = JSON.stringify(res)
+// 		// 		res = await mariadb.asyncQuery(myQuery, params)
+// 		res = JSON.stringify(res[0])
 // 		console.log(res)
 
-// 		res = JSON.parse(res)
-// 		console.log(res)
+// 		// 		res = JSON.parse(res)
+// 		// 		console.log(res)
 
 // 		console.log('*************************************')
 
 // 		let resarray = await mariadb.asyncQueryArray(myQuery, params)
 // 		console.log(resarray)
 
-// 		resarray = JSON.stringify(resarray)
+// 		resarray = JSON.stringify(resarray[0])
 // 		console.log(resarray)
 
-// 		resarray = JSON.parse(resarray)
-// 		console.log(resarray)
+// 		// 		resarray = JSON.parse(resarray)
+// 		// 		console.log(resarray)
 // 	})()
 // }, 1000)
 
