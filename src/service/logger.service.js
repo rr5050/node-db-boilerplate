@@ -4,7 +4,7 @@ import { isStringAndGreaterThanLength } from '../utils/misc.utils.js'
 
 /*
 	import:
-		import { logger } from './service/logger.service.js'
+		import logger from './service/logger.service.js'
 
 	Usage:
 		logger.trace('<message>')
@@ -59,6 +59,7 @@ function createLogger(opts) {
 	return manager.createLogger()
 }
 
-export const logger = createLogger(logOptions)
-
+const logger = createLogger(logOptions)
 logger.setLevel(process.env.LOG_LEVEL)
+
+export default logger
