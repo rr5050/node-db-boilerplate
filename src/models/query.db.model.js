@@ -55,6 +55,20 @@ const querySettings = async (folder) => {
 					},
 				},
 			},
+			get_login_table_without_cache: {
+				sql: sqlfile('get_login_table.sql'),
+			},
+			get_login_table_with_cache: {
+				sql: sqlfile('get_login_table.sql'),
+				redis: {
+					read: {
+						cmd: ['get', 'login_table_data'],
+					},
+					write: {
+						cmd: ['set', 'login_table_data', ''],
+					},
+				},
+			},
 		}
 		readyController.emit(readyControllerWaitForEvent)
 		return tmpQuery

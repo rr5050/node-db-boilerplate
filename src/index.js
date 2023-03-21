@@ -24,9 +24,29 @@ readyController.on('allReady', () => {
 })
 readyController.emit('readyToListen')
 
+// examples below here..........................................................
+let myQuery = null
+let params = null
+let dbresult = null
 //
-// test case to see if cache of mariadb/redis is working
-const myQuery = 'create_player_login_return_playerid_admin'
-const params = ['xx@gmail.com79', 1, 'xx']
-const dbresult = await cachedb(myQuery, params)
+//
+// executing a sql statement (select from table) with no parameters, and no cache. The sql statement is stored in a file.
+console.log('-----get_login_table_without_cache----')
+myQuery = 'get_login_table_without_cache'
+dbresult = await cachedb(myQuery, [])
+console.log(dbresult)
+//
+//
+// executing a sql statement (select from table) with no parameters, WITH cache. The sql statement is stored in a file.
+console.log('-----get_login_table_with_cache----')
+myQuery = 'get_login_table_with_cache'
+dbresult = await cachedb(myQuery, [])
+console.log(dbresult)
+//
+//
+// calling a stored procedure that both writes and reads sql. the read part is cached on future calls
+console.log('-----create_player_login_return_playerid_admin----')
+myQuery = 'create_player_login_return_playerid_admin'
+params = ['xx@gmail.com103', 1, 'xx']
+dbresult = await cachedb(myQuery, params)
 console.log(dbresult)
