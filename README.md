@@ -1,4 +1,4 @@
-# Starter Boilerplate for Node.js + MariaDB +++
+# Starter Boilerplate for Node.js + cache db (MariaDB+Redis) +++
 
     setup:
     npm install
@@ -7,7 +7,31 @@
 
 ### Docker-compose
 
-Will setup a MariaDB server with a docker volume to contain the database. If it's not present at startup, the database will be started and then initialized with files in the folder './src/db/sql/initdb' - using them in an alfabetically order.
+Will setup a MariaDB server with a docker volume to contain the database. If it's not present at startup, the database will be started and then initialized with files in the folder './src/config/init-mariadb' - using them in an alfabetically order.
+
+---
+
+### cache.db.model.js
+
+Access both MariaDB and Redis with this module using only one function. Cache is handled by your setup in the query module, 'query.db.model.js'. This has been designed so that in most caces you would not need direct access to mariadb or redis - instead you ONLY use this one.
+
+in any back-end javascript file, import it with one of these:
+
+    import cachedb from './models/cache.db.model.js'
+
+and call it like this:
+
+    const dbresult = await cachedb(myQuery, params)
+
+---
+
+### query.db.model.js
+
+Templates for queries regarding access to MariaDB and Redis, optimized to be used for caching queries with the module 'cache.db.model.js'
+
+in any back-end javascript file, import it with one of these:
+
+    import QUERY from './models/query.db.model.js'
 
 ---
 
@@ -17,14 +41,34 @@ Has been specifically setup to recover from most errors. You still need to write
 
 in any back-end javascript file, import it with one of these:
 
-    import { asyncQuery } from '../models/mariadb.db.model.js'
-    import { asyncQueryArray } from '../models/mariadb.db.model.js'
-    import { asyncQuery, asyncQueryArray } from '../models/mariadb.db.model.js'
+    import mariadb from './models/mariadb.db.model.js'
 
 and call it with one of these async functions with await:
 
-    asyncQuery(query, params)
-    asyncQueryArray(query, params)
+    result = await mariadb.asyncQuery(myQuery, params)
+    result = await mariadb.asyncQueryArray(myQuery, params)
+
+---
+
+### redis.db.model.js
+
+Has been specifically setup to recover from most errors. Using io-redis as a client, and setup to keep connection alive.
+
+in any back-end javascript file, import it with one of these:
+
+    import redis from './models/redis.db.model.js'
+
+and call it with:
+
+    redis.<any-ioredis-commands>
+    result = await redis.customCall(<any-redis-commands-spliced-up-into-an-array>)
+    await redis.customDelete(<array-of-key-patterns-to-delete>,<params>)
+
+Examples used in the code (see code for more details):
+
+    result = JSON.parse(await redis.customCall(buildRedisQuery('read', myQuery, params)))
+    await redis.customCall(buildRedisQuery('write', myQuery, params, JSON.stringify(result)))
+    await redis.customDelete(QUERY[myQuery].redis.delete.keys, params)
 
 ---
 
@@ -42,9 +86,3 @@ and trigger events as following (success and fail shown):
 
     readyController.emit('eventName')
     readyController.emit('eventName:error')
-
----
-
-### query.db.model.js
-
-Will setup all queries needed for databases, including loading them ASYNC from files.
