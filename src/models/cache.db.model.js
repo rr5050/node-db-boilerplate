@@ -29,8 +29,9 @@ const cachedb = async (myQuery, params) => {
 	console.time('cachedb_total_timer')
 
 	let result = null
+
 	// check redis first
-	if (QUERY[myQuery].redis.read) {
+	if (QUERY[myQuery].redis && QUERY[myQuery].redis.read) {
 		console.time('cachedb_redis_read')
 		result = JSON.parse(await redis.customCall(buildRedisQuery('read', myQuery, params)))
 		console.timeEnd('cachedb_redis_read')
@@ -39,18 +40,24 @@ const cachedb = async (myQuery, params) => {
 	if (result === null) {
 		// redis didn't have any data. Check with mariadb instead
 		console.time('cachedb_mariadb')
-		result = (await mariadb.asyncQuery(QUERY[myQuery].sql, params))[0]
+		result = await mariadb.asyncQuery(QUERY[myQuery].sql, params)
+
+		// keep only select data from mariadb. Other result data is stripped away
+		if (Array.isArray(result[0])) {
+			result = result[0]
+		}
+
 		console.timeEnd('cachedb_mariadb')
 
 		// delete redis keys based on pattern (and finish this before writing new data to redis)
-		if (QUERY[myQuery].redis.delete) {
+		if (QUERY[myQuery].redis && QUERY[myQuery].redis.delete) {
 			console.time('cachedb_redis_delete')
 			await redis.customDelete(QUERY[myQuery].redis.delete.keys, params)
 			console.timeEnd('cachedb_redis_delete')
 		}
 
 		// store the result from mariadb in redis for future cache
-		if (QUERY[myQuery].redis.write) {
+		if (QUERY[myQuery].redis && QUERY[myQuery].redis.write) {
 			console.time('cachedb_redis_write')
 			await redis.customCall(
 				buildRedisQuery('write', myQuery, params, JSON.stringify(result))
