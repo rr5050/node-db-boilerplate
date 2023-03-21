@@ -28,37 +28,9 @@ readyController.on('allReady', () => {
 })
 readyController.emit('readyToListen')
 
+//
+// test case to see if cache of mariadb/redis is working
 const myQuery = 'create_player_login_return_playerid_admin'
 const params = ['xx@gmail.com79', 1, 'xx']
 const dbresult = await cachedb(myQuery, params)
 console.log(dbresult)
-
-// setTimeout(() => {
-// 	;(async () => {
-// 		const myQuery = QUERY.create_player_login_return_playerid_admin.sql
-// 		const params = ['test og nissen2', 'max3@hei.hopp', 1]
-
-// 		console.time('Timer')
-// 		let res = await mariadb.asyncQuery(myQuery, params)
-// 		console.timeEnd('Timer')
-// 		console.log(res)
-
-// 		// 		res = await mariadb.asyncQuery(myQuery, params)
-// 		res = JSON.stringify(res[0])
-// 		console.log(res)
-
-// 		// 		res = JSON.parse(res)
-// 		// 		console.log(res)
-
-// 		console.log('*************************************')
-
-// 		let resarray = await mariadb.asyncQueryArray(myQuery, params)
-// 		console.log(resarray)
-
-// 		resarray = JSON.stringify(resarray[0])
-// 		console.log(resarray)
-
-// 		// 		resarray = JSON.parse(resarray)
-// 		// 		console.log(resarray)
-// 	})()
-// }, 1000)
