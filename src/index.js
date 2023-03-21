@@ -28,7 +28,10 @@ readyController.on('allReady', () => {
 })
 readyController.emit('readyToListen')
 
-// ---------------------------------------------------------- test mariadb with 2 queries
+const myQuery = 'create_player_login_return_playerid_admin'
+const params = ['xx@gmail.com79', 1, 'xx']
+const dbresult = await cachedb(myQuery, params)
+console.log(dbresult)
 
 // setTimeout(() => {
 // 	;(async () => {
@@ -59,25 +62,3 @@ readyController.emit('readyToListen')
 // 		// 		console.log(resarray)
 // 	})()
 // }, 1000)
-
-// let arr2 = [10, 20, 30, 'rino']
-// let newstring4 = SqlString.format('generation 2: ?, ?, ?, ?', arr2)
-// console.log(newstring4)
-//
-//redis testing
-//
-// const keyParam = 'mykey'
-// const valueParam = 'redis testing: rinorabe (from index.js)#2'
-// redis.call('set', keyParam, valueParam)
-// redis.get('mykey').then((result) => {
-// 	console.log(result)
-// })
-//
-// redis
-// 	.customGet('mykey')
-// 	.then((result) => {
-// 		console.log('Result from redis.get function = ', result)
-// 	})
-// 	.catch((error) => {
-// 		console.log('Error from redis.get function = ', error)
-// 	})

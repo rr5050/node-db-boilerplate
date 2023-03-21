@@ -2,6 +2,7 @@
 import readyController from '../controllers/ready.controller.js'
 import logger from '../service/logger.service.js'
 import { Redis } from 'ioredis'
+import SqlString from 'sqlstring'
 
 class MyRedis extends Redis {
 	constructor() {
@@ -9,6 +10,7 @@ class MyRedis extends Redis {
 			//TODO: add bind
 			//TODO: add host
 			//TODO: add username
+			//TODO: add lazy delete (unlink)
 			port: process.env.REDIS_PORT,
 			host: '127.0.0.1',
 			username: 'default',
@@ -65,7 +67,7 @@ class MyRedis extends Redis {
 			logger.debug('Redis: status = wait')
 		})
 
-		// Check connection. We signal to readyController the final status.
+		// Check connection. Signal to readyController the final status.
 		super
 			.ping()
 			.then(() => {
@@ -88,41 +90,32 @@ class MyRedis extends Redis {
 		}
 	}
 
-	customGet = async (...params) => {
+	customCall = async (params) => {
 		try {
 			await this.updateConnection()
-			const output = await super.get(...params)
-			return output
-		} catch (err) {
-			logger.error('Redis: error @ customGet: ', err)
-			throw err
-		}
-	}
-
-	customSet = async (...params) => {
-		try {
-			await this.updateConnection()
-			const output = await super.set(...params)
-			return output
-		} catch (err) {
-			logger.error('Redis: error @ customSet: ', err)
-			throw err
-		}
-	}
-
-	customCall = async (...params) => {
-		try {
-			await this.updateConnection()
-			// const output = await super.call('set', ...params)
-			const output = await super.call(
-				'set',
-				'rino',
-				Buffer.from(`[{"players_id":3,"is_admin":1}]`)
-			)
-			// const output = await super.call('get', 'rino')
+			const output = await super.call(...params)
 			return output
 		} catch (err) {
 			logger.error('Redis: error @ customCall: ', err)
+			throw err
+		}
+	}
+
+	customDelete = async (keyPatterns, params) => {
+		try {
+			await this.updateConnection()
+			let keysToDelete = []
+			for (let keyPattern of keyPatterns) {
+				keyPattern = SqlString.format(keyPattern, params) // replace each question (?) with params
+				const newKeystoDelete = await super.keys(keyPattern) // get all keys matching the pattern
+				keysToDelete.push(...newKeystoDelete) // add all keys to the array
+			}
+			if (keysToDelete.length > 0) {
+				await super.del(keysToDelete) // delete all matching keys
+			}
+			return
+		} catch (err) {
+			logger.error('Redis: error @ customDelete: ', err)
 			throw err
 		}
 	}
@@ -131,10 +124,3 @@ class MyRedis extends Redis {
 const redis = new MyRedis()
 
 export default redis
-
-// TODO: create support for MULTI/EXEC commands:
-// const replies = await client
-// 	.multi()
-// 	.call('JSON.SET', 'key', JSON.stringify({ field: 'value' }))
-// 	.call('JSON.GET', 'key', '$')
-//     .exec()
