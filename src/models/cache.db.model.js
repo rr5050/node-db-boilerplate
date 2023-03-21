@@ -64,3 +64,5 @@ const cachedb = async (myQuery, params) => {
 }
 
 export default cachedb
+
+// TODO: remove console timers above
